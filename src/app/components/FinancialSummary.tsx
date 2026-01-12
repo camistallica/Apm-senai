@@ -36,7 +36,7 @@ export function FinancialSummary({ sales, products }: any) {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Relatorio_Vendas");
-    XLSX.writeFile(wb, "Movimentacao_APM_SENAI.xlsx");
+    XLSX.writeFile(wb, "Movimentacao_AAPM_SENAI.xlsx");
   };
 
   return (

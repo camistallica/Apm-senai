@@ -143,7 +143,7 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
             <div className="flex justify-between items-center bg-white p-5 border border-gray-200 shadow-sm border-l-8 border-gray-800">
               <div>
                 <h2 className="font-black uppercase text-sm tracking-tighter text-gray-800">Controle de Estoque</h2>
-                <p className="text-[10px] font-bold text-gray-400 uppercase italic">Listagem oficial de materiais APM</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase italic">Listagem oficial de materiais AAPM</p>
               </div>
               <button 
                 onClick={() => setEditingProduct({ nome: '', quantidade: 0, preco: 0, custoUnitario: 0, estoqueMinimo: 5 })}
@@ -175,7 +175,7 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-[#da291c] rounded-full animate-pulse"></div>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
-              Sistema de Gestão APM
+              Sistema de Gestão AAPM
             </p>
           </div>
           
