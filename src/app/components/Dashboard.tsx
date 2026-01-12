@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { db } from '../../firebase';
-import { collection, onSnapshot, query, orderBy, doc, writeBatch } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy, doc, writeBatch, deleteDoc } from 'firebase/firestore';
 import { ProductList } from './ProductList';
 import { ProductEditor } from './ProductEditor';
 import { StockAlerts } from './StockAlerts';
@@ -27,20 +27,6 @@ export interface Sale {
   custoUnitario: number;
 }
 
-const handleDelete = async (id: string) => {
-  if (confirm("Tem certeza que deseja excluir este produto?")) {
-    try {
-      const { deleteDoc, doc } = await import('firebase/firestore');
-      const { db } = await import('../../firebase'); // ajuste o caminho se necessário
-      await deleteDoc(doc(db, "produtos", id));
-      alert("Produto excluído com sucesso!");
-    } catch (error) {
-      console.error("Erro ao excluir produto:", error);
-      alert("Erro ao excluir produto.");
-    }
-  }
-};
-
 const initialProducts = [
   { nome: 'Bolinha de pingpong', quantidade: 150, preco: 2.50, custoUnitario: 1.20, estoqueMinimo: 50 },
   { nome: 'Raquete de pingpong', quantidade: 25, preco: 45.00, custoUnitario: 28.00, estoqueMinimo: 10 },
@@ -56,15 +42,26 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
   
   const isMasterAdmin = usuario === 'ADMINISTRADOR MESTRE';
 
-  // Função para formatar o nome (Ex: CAMILA FERREIRA -> Camila)
+  // --- FUNÇÃO DE EXCLUIR (AGORA DENTRO DO COMPONENTE) ---
+  const handleDelete = async (id: string) => {
+    if (window.confirm("🚨 ATENÇÃO: Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.")) {
+      try {
+        // Usamos o deleteDoc e doc que já foram importados no topo do arquivo
+        await deleteDoc(doc(db, "produtos", id));
+        alert("Produto removido com sucesso!");
+      } catch (error) {
+        console.error("Erro ao excluir produto:", error);
+        alert("Erro técnico ao excluir. Verifique as regras do Firebase.");
+      }
+    }
+  };
+
   const formatarNome = (nomeCompleto: string) => {
     if (!nomeCompleto) return "";
     const primeiroNome = nomeCompleto.split(' ')[0].toLowerCase();
     return primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1);
   };
 
-
-  // Escuta em tempo real para Produtos
   useEffect(() => {
     const qProds = query(collection(db, "produtos"));
     const unsub = onSnapshot(qProds, (snaps) => {
@@ -79,7 +76,6 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
     return () => unsub();
   }, []);
 
-  // Escuta em tempo real para Vendas
   useEffect(() => {
     const qSales = query(collection(db, "vendas"), orderBy("data", "desc"));
     const unsub = onSnapshot(qSales, (snaps) => {
@@ -111,7 +107,6 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
           </div>
 
           <div className="flex items-center gap-6">
-            {/* Saudação com o nome em Preto (Texto Black) */}
             <div className="text-right hidden sm:block border-r border-white/20 pr-6">
               <p className="text-[9px] font-black uppercase tracking-[0.2em] opacity-70 leading-none mb-1">Acesso Autorizado</p>
               <p className="text-sm font-bold text-black uppercase italic">Olá, {formatarNome(usuario)}</p>
