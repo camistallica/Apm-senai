@@ -8,6 +8,7 @@ import { FinancialSummary } from './FinancialSummary';
 import { SaleDialog } from './SaleDialog';
 import { AdminDashboard } from './AdminDashboard';
 import { LogOut, Package, TrendingUp, AlertTriangle, ShieldCheck, Plus } from 'lucide-react';
+import { ConfirmDeleteDialog } from './ConfirmDeleteDialog';
 
 export interface Product {
   id: string;
@@ -39,6 +40,7 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
   const [sales, setSales] = useState<Sale[]>([]);
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [saleProduct, setSaleProduct] = useState<any>(null);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   
   const isMasterAdmin = usuario === 'ADMINISTRADOR MESTRE';
 
@@ -161,7 +163,10 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
               products={products} 
               onEdit={setEditingProduct} 
               onSale={setSaleProduct} 
-              onDelete={handleDelete}
+              onDelete={(id: string) => { // Adicionei ': string' aqui
+  const prod = products.find(p => p.id === id);
+  if (prod) setProductToDelete(prod);
+}}
             />
           </div>
         )}
@@ -177,6 +182,20 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
           onCancel={() => setEditingProduct(null)} 
         />
       )}
+
+      {productToDelete && (
+  <ConfirmDeleteDialog
+    isOpen={!!productToDelete}
+    productName={productToDelete.nome}
+    onClose={() => setProductToDelete(null)}
+    onConfirm={async () => {
+      if (productToDelete) {
+        await handleDelete(productToDelete.id);
+        setProductToDelete(null);
+      }
+    }}
+  />
+)}
       
       {saleProduct && (
         <SaleDialog 
