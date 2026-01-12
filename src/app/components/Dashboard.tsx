@@ -27,6 +27,20 @@ export interface Sale {
   custoUnitario: number;
 }
 
+const handleDelete = async (id: string) => {
+  if (confirm("Tem certeza que deseja excluir este produto?")) {
+    try {
+      const { deleteDoc, doc } = await import('firebase/firestore');
+      const { db } = await import('../../firebase'); // ajuste o caminho se necessário
+      await deleteDoc(doc(db, "produtos", id));
+      alert("Produto excluído com sucesso!");
+    } catch (error) {
+      console.error("Erro ao excluir produto:", error);
+      alert("Erro ao excluir produto.");
+    }
+  }
+};
+
 const initialProducts = [
   { nome: 'Bolinha de pingpong', quantidade: 150, preco: 2.50, custoUnitario: 1.20, estoqueMinimo: 50 },
   { nome: 'Raquete de pingpong', quantidade: 25, preco: 45.00, custoUnitario: 28.00, estoqueMinimo: 10 },
@@ -48,6 +62,7 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
     const primeiroNome = nomeCompleto.split(' ')[0].toLowerCase();
     return primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1);
   };
+
 
   // Escuta em tempo real para Produtos
   useEffect(() => {
@@ -151,6 +166,7 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
               products={products} 
               onEdit={setEditingProduct} 
               onSale={setSaleProduct} 
+              onDelete={handleDelete}
             />
           </div>
         )}
