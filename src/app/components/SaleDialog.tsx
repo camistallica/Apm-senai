@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { X, Printer } from 'lucide-react';
 import { db } from '../../firebase';
 import { doc, updateDoc, collection, addDoc, increment } from 'firebase/firestore';
 import { Receipt } from './Receipt';
@@ -10,38 +11,29 @@ export function SaleDialog({ product, onSale, onCancel, usuario }: any) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (quantidade > 0 && product.quantidade >= quantidade) {
       const saleData = {
         produtoId: product.id,
         nomeProduto: product.nome,
         quantidade: quantidade,
         valorTotal: quantidade * product.preco,
-        precoUnitario: product.preco,
+        precoUnitario: product.preco, // Adicionado para o recibo
         custoUnitario: product.custoUnitario,
-        vendedor: usuario,
         data: new Date()
       };
 
-      try {
-        await addDoc(collection(db, "vendas"), saleData);
-        
-        await updateDoc(doc(db, "produtos", product.id), {
-          quantidade: increment(-quantidade)
-        });
 
-        setCompletedData(saleData);
-        setShowReceipt(true);
-      } catch (error) {
-        console.error("Erro ao processar venda:", error);
-        alert("Ocorreu um erro ao registrar a venda.");
-      }
+      await addDoc(collection(db, "vendas"), saleData);
+      await updateDoc(doc(db, "produtos", product.id), {
+        quantidade: increment(-quantidade)
+      });
+
+      setCompletedData(saleData);
+      setShowReceipt(true);
     }
   };
 
-  if (showReceipt) {
-    return <Receipt sale={completedData} onClose={onSale} />;
-  }
+  if (showReceipt) return <Receipt sale={completedData} onClose={onSale} />;
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -51,38 +43,20 @@ export function SaleDialog({ product, onSale, onCancel, usuario }: any) {
           <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Item: {product.nome}</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="text-[10px] font-black uppercase text-gray-400 mb-1 block">Quantidade</label>
-              <input 
-                type="number" 
-                value={quantidade} 
-                onChange={e => setQuantidade(Number(e.target.value))}
-                min="1"
-                max={product.quantidade}
-                className="w-full p-3 bg-gray-50 border-2 border-gray-100 font-black focus:border-[#da291c] outline-none transition-all"
-                required
-              />
-            </div>
-
+            <input 
+              type="number" 
+              value={quantidade} 
+              onChange={e => setQuantidade(Number(e.target.value))}
+              max={product.quantidade}
+              className="w-full p-3 bg-gray-50 border-2 border-gray-100 font-black"
+            />
             <div className="bg-gray-100 p-4 border-l-4 border-red-600">
               <p className="text-[10px] font-black uppercase text-gray-400">Total a Pagar</p>
               <p className="text-2xl font-black text-gray-900">R$ {(quantidade * product.preco).toFixed(2)}</p>
             </div>
-
-            <div className="flex gap-2 pt-2">
-              <button 
-                type="button" 
-                onClick={onCancel} 
-                className="flex-1 py-3 font-black text-[10px] uppercase border hover:bg-gray-50 transition"
-              >
-                Cancelar
-              </button>
-              <button 
-                type="submit" 
-                className="flex-1 py-3 bg-[#da291c] text-white font-black text-[10px] uppercase hover:bg-red-700 transition"
-              >
-                Confirmar
-              </button>
+            <div className="flex gap-2">
+              <button type="button" onClick={onCancel} className="flex-1 py-3 font-black text-[10px] uppercase border">Cancelar</button>
+              <button type="submit" className="flex-1 py-3 bg-[#da291c] text-white font-black text-[10px] uppercase">Confirmar</button>
             </div>
           </form>
         </div>
