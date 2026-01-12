@@ -44,11 +44,9 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
   
   const isMasterAdmin = usuario === 'ADMINISTRADOR MESTRE';
 
-  // --- FUNÇÃO DE EXCLUIR LIMPA (SEM ALERTA JS) ---
   const handleDelete = async (id: string) => {
     try {
       await deleteDoc(doc(db, "produtos", id));
-      // Exclusão silenciosa e rápida, a lista atualiza sozinha via Snapshot
     } catch (error) {
       console.error("Erro ao excluir produto:", error);
     }
@@ -93,7 +91,7 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
   }, [sales]);
 
   return (
-    <div className="min-h-screen bg-[#f4f4f4] font-sans text-gray-800">
+    <div className="min-h-screen flex flex-col bg-[#f4f4f4] font-sans text-gray-800">
       <header className="bg-[#da291c] text-white p-4 shadow-lg border-b-4 border-black/10">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -129,7 +127,7 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto p-6">
+      <main className="max-w-7xl mx-auto p-6 flex-grow w-full">
         {activeTab === 'financial' && (
           <FinancialSummary 
             totalVendas={stats.totalVendas} 
@@ -171,7 +169,27 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
         {activeTab === 'admin' && <AdminDashboard isMasterAdmin={isMasterAdmin}/>}
       </main>
 
-      {/* MODAL DE EDIÇÃO */}
+      {/* RODAPÉ DE CRÉDITOS */}
+      <footer className="w-full bg-white border-t border-gray-200 py-6 mt-auto">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-[#da291c] rounded-full animate-pulse"></div>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
+              Sistema de Gestão APM
+            </p>
+          </div>
+          
+          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+            Desenvolvido por <span className="text-black font-black border-b-2 border-[#da291c] pb-0.5">Camila Ferreira França</span>
+          </p>
+
+          <p className="text-[9px] font-medium text-gray-400 uppercase">
+            © 2024 • Versão Final 1.0
+          </p>
+        </div>
+      </footer>
+
+      {/* MODAIS E DIÁLOGOS */}
       {editingProduct && (
         <ProductEditor 
           product={editingProduct} 
@@ -180,7 +198,6 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
         />
       )}
 
-      {/* JANELA DE CONFIRMAÇÃO BONITA (ÚNICO ALERTA) */}
       {productToDelete && (
         <ConfirmDeleteDialog
           isOpen={!!productToDelete}
@@ -195,7 +212,6 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
         />
       )}
       
-      {/* DIÁLOGO DE VENDA */}
       {saleProduct && (
         <SaleDialog 
           product={saleProduct} 
