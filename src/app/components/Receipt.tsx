@@ -1,5 +1,5 @@
 import { X, Download } from 'lucide-react';
-import { generateReceiptPDF } from './ReceiptGenerator'; // Importe a função que criamos
+import { generateReceiptPDF } from './ReceiptGenerator';
 
 export function Receipt({ sale, onClose }: any) {
   return (
@@ -38,7 +38,7 @@ export function Receipt({ sale, onClose }: any) {
           }}>
             <div style={{ textAlign: 'center', marginBottom: '30px' }}>
               <div style={{ fontSize: '24px', fontWeight: '900', color: '#da291c' }}>SENAI</div>
-              <div style={{ fontSize: '10px', fontWeight: '700', letterSpacing: '3px', marginTop: '5px' }}>APM - GESTÃO DE ESTOQUE</div>
+              <div style={{ fontSize: '10px', fontWeight: '700', letterSpacing: '3px', marginTop: '5px' }}>AAPM - GESTÃO DE ESTOQUE</div>
             </div>
 
             <div style={{ marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '20px' }}>
@@ -54,7 +54,7 @@ export function Receipt({ sale, onClose }: any) {
             </div>
 
             <div style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px dashed #ccc', textAlign: 'center' }}>
-              <p style={{ fontSize: '10px', color: '#888', textTransform: 'uppercase' }}>Comprovante gerado pelo sistema APM</p>
+              <p style={{ fontSize: '10px', color: '#888', textTransform: 'uppercase' }}>Comprovante gerado pelo sistema AAPM</p>
               <p style={{ fontSize: '9px', fontWeight: 'bold', marginTop: '10px' }}>Desenvolvido por Camila Ferreira França</p>
             </div>
           </div>
