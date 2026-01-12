@@ -180,11 +180,11 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
           </div>
           
           <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-            Desenvolvido por <span className="text-black font-black border-b-2 border-[#da291c] pb-0.5">Camila Ferreira França</span>
+            Desenvolvido por <span className="text-black font-black border-b-2 border-[#da291c] pb-0.5">Camila Ferreira França - Correios Manhã</span>
           </p>
 
           <p className="text-[9px] font-medium text-gray-400 uppercase">
-            © 2024 • Versão Final 1.0
+            © 2026 • Versão Final 1.0
           </p>
         </div>
       </footer>
