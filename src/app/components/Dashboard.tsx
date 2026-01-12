@@ -44,17 +44,13 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
   
   const isMasterAdmin = usuario === 'ADMINISTRADOR MESTRE';
 
-  // --- FUNÇÃO DE EXCLUIR (AGORA DENTRO DO COMPONENTE) ---
+  // --- FUNÇÃO DE EXCLUIR LIMPA (SEM ALERTA JS) ---
   const handleDelete = async (id: string) => {
-    if (window.confirm("🚨 ATENÇÃO: Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.")) {
-      try {
-        // Usamos o deleteDoc e doc que já foram importados no topo do arquivo
-        await deleteDoc(doc(db, "produtos", id));
-        alert("Produto removido com sucesso!");
-      } catch (error) {
-        console.error("Erro ao excluir produto:", error);
-        alert("Erro técnico ao excluir. Verifique as regras do Firebase.");
-      }
+    try {
+      await deleteDoc(doc(db, "produtos", id));
+      // Exclusão silenciosa e rápida, a lista atualiza sozinha via Snapshot
+    } catch (error) {
+      console.error("Erro ao excluir produto:", error);
     }
   };
 
@@ -163,10 +159,10 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
               products={products} 
               onEdit={setEditingProduct} 
               onSale={setSaleProduct} 
-              onDelete={(id: string) => { // Adicionei ': string' aqui
-  const prod = products.find(p => p.id === id);
-  if (prod) setProductToDelete(prod);
-}}
+              onDelete={(id: string) => {
+                const prod = products.find(p => p.id === id);
+                if (prod) setProductToDelete(prod);
+              }}
             />
           </div>
         )}
@@ -175,6 +171,7 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
         {activeTab === 'admin' && <AdminDashboard isMasterAdmin={isMasterAdmin}/>}
       </main>
 
+      {/* MODAL DE EDIÇÃO */}
       {editingProduct && (
         <ProductEditor 
           product={editingProduct} 
@@ -183,20 +180,22 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
         />
       )}
 
+      {/* JANELA DE CONFIRMAÇÃO BONITA (ÚNICO ALERTA) */}
       {productToDelete && (
-  <ConfirmDeleteDialog
-    isOpen={!!productToDelete}
-    productName={productToDelete.nome}
-    onClose={() => setProductToDelete(null)}
-    onConfirm={async () => {
-      if (productToDelete) {
-        await handleDelete(productToDelete.id);
-        setProductToDelete(null);
-      }
-    }}
-  />
-)}
+        <ConfirmDeleteDialog
+          isOpen={!!productToDelete}
+          productName={productToDelete.nome}
+          onClose={() => setProductToDelete(null)}
+          onConfirm={async () => {
+            if (productToDelete) {
+              await handleDelete(productToDelete.id);
+              setProductToDelete(null);
+            }
+          }}
+        />
+      )}
       
+      {/* DIÁLOGO DE VENDA */}
       {saleProduct && (
         <SaleDialog 
           product={saleProduct} 
