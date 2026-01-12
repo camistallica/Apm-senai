@@ -71,7 +71,7 @@ export function Login({ onLogin }: LoginProps) {
         </div>}
 
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tighter italic leading-none">APM SENAI</h1>
+          <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tighter italic leading-none">AAPM SENAI</h1>
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mt-2">Portal de Gestão de Materiais</p>
         </div>
 
@@ -122,7 +122,7 @@ export function Login({ onLogin }: LoginProps) {
         <div className="mt-8 pt-6 border-t border-gray-100 text-center">
           <p className="text-[9px] text-gray-300 font-bold uppercase tracking-widest leading-relaxed">
             Acesso Restrito <br/> 
-            Sistemas Industriais APM © 2026
+            AAPM © 2026
           </p>
         </div>
       </div>

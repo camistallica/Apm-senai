@@ -97,7 +97,7 @@ export function Dashboard({ usuario, onLogout }: { usuario: string, onLogout: ()
           <div className="flex items-center gap-3">
             <Package size={28} />
             <div>
-              <h1 className="text-xl font-black uppercase tracking-tighter leading-none">APM SENAI</h1>
+              <h1 className="text-xl font-black uppercase tracking-tighter leading-none">AAPM SENAI</h1>
               <p className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-80">Gestão de Materiais e Fluxo</p>
             </div>
           </div>
